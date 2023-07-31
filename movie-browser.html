@@ -12,6 +12,7 @@
                 ['Find movie titles containing "dog"', 'GET', '/find?contains=dog', (res) => renderTitles(res)],
                 ['Find movie titles starting with "the"', 'GET', '/find?startsWith=the', (res) => renderTitles(res)],
                 ['Remove all movies', 'DELETE', '/all', (res) => ''],
+                ['Add movies', 'POST', '/insert', (res) => renderTitles(res)],
                 ['List all movies', 'GET', '/all', (res) => renderTitles(res)],
             ];
 
