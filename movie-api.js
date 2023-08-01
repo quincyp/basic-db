@@ -1,13 +1,16 @@
 const express = require('express')
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+require('dotenv').config()
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const PORT = 3000
+const envDB = `${process.env.dbName}`
+const envInventory = `${process.env.dbCollectionName}`
 
 const app = express()
 app.use(cors())
 
 
-const uri = "";
+const uri = `mongodb+srv://${process.env.dbUserName}:${process.env.dbPassword}@${process.env.dbCluster}.${process.env.dbMongold}.mongodb.net/?retryWrites=true&w=majority`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -35,7 +38,7 @@ app.route('/all')
       // Connect the client to the server	(optional starting in v4.7)
       await client.connect();
       // Send a ping to confirm a successful connection
-      const collection = client.db("basicdb").collection("inventory");
+      const collection = client.db(envDB).collection(envInventory);
       // finds all items in the collection
       result = await collection.find({}).toArray();
   
@@ -65,7 +68,7 @@ app.route('/all')
     let error = null;
     try {
       await client.connect();
-      const collection = client.db("basicdb").collection("inventory");
+      const collection = client.db(envDB).collection(envInventory);
       // TODO: UNCOMMENT WHEN READY TO IMPLEMENT DELETE ROUTE
       result = await collection.deleteMany({});
       console.log(result);
@@ -91,7 +94,7 @@ app.get('/find', async (req, res) => {
   if (req.query.hasOwnProperty('contains')) {
     try {
       await client.connect();
-      const collection = client.db("basicdb").collection("inventory");
+      const collection = client.db(envDB).collection(envInventory);
       // Alternative regex
       // result = await collection.find({
       //   title: {
@@ -124,7 +127,7 @@ app.get('/find', async (req, res) => {
   } else if(req.query.hasOwnProperty('startsWith')) {
     try {
       await client.connect();
-      const collection = client.db("basicdb").collection("inventory");
+      const collection = client.db(envDB).collection(envInventory);
       result = await collection.find({
         title: {
           $regex: new RegExp(req.query.startsWith, 'i')
@@ -156,7 +159,7 @@ app.route('/insert')
     let result = {};
     try {
       await client.connect();
-      const collection = client.db("basicdb").collection("inventory");
+      const collection = client.db(envDB).collection(envInventory);
       insertList = [
         { "title": "The Avengers 2" },
         { "title": "All Dogs Go To Heaven 2" },
